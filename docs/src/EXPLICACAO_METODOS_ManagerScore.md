@@ -30,68 +30,34 @@ Buscar todos os scores de um jogador específico. Retorna lista com todos os sco
 ---
 
 ### 5. `obter_melhor_score_jogador(self, nome)`
-**Objetivo:** Retornar apenas o melhor score de um jogador.
+Retornar apenas o melhor score de um jogador. Consulta específica. Mostra recorde pessoal.
 
-**Por quê:** Consulta específica. Mostra recorde pessoal.
-
-**Detalhe:** Reutiliza `obter_score_jogador()`. Retorna None se sem scores.
 
 ---
 
 ### 6. `ordenar_scores(self)`
-**Objetivo:** Manter scores em ordem decrescente por pontos e nível.
-
-**Por quê:** Suporte crítico. Garante rankings corretos.
-
-**Detalhe:** Executada automaticamente. Critério: pontos (primário), nível (secundário).
+Manter scores em ordem decrescente por pontos e nível. Garante rankings corretos. Critério: pontos (primário), nível (secundário).
 
 ---
 
 ### 7. `limpar_scores(self)`
-**Objetivo:** Remover todos os scores do sistema.
-
-**Por quê:** Reset para testes, desenvolvimento e novas temporadas.
-
-**Detalhe:** Limpa memória e persiste mudança.
+Remover todos os scores do sistema. Reset para testes, desenvolvimento e novas temporadas. Limpa memória e persiste mudança.
 
 ---
 
 ### 8. `exibir_ranking(self, quantidade=10)`
-**Objetivo:** Formatar e retornar ranking em string legível.
-
-**Por quê:** Interface de apresentação. Melhora experiência do usuário.
-
-**Detalhe:** Retorna string formatada com posição, nome, pontos, nível e data.
+Formatar e retornar ranking em string legível. Interface de apresentação. Melhora experiência do usuário. Retorna string formatada com posição, nome, pontos, nível e data. A ser atualizada e adequada corretamente à interface.
 
 ---
 
 ### 9. `remover_score(self, nome, pontos)`
-**Objetivo:** Deletar score específico (manutenção de dados).
-
-**Por quê:** Remove registros duplicados ou inválidos. Persiste mudança.
-
-**Detalhe:** Busca por combinação (nome + pontos).
+Deletar score específico (manutenção de dados). Remove registros duplicados ou inválidos. Persiste mudança. Busca por combinação (nome + pontos).
 
 ---
 
 ### 10. `obter_total_scores(self)`
-**Objetivo:** Retornar quantidade total de scores registrados.
+Retornar quantidade total de scores registrados. Informação estatística para interface e monitoramento.
 
-**Por quê:** Informação estatística para interface e monitoramento.
-
-**Detalhe:** Operação O(1). Simples e rápido.
-
----
-
-## 🎯 Características Principais
-
-| Característica | Descrição |
-|---|---|
-| **Ordenação Automática** | Dados sempre mantidos ordenados por pontos/nível |
-| **Validação de Entrada** | Verifica nome e pontos antes de aceitar |
-| **Busca Case-Insensitive** | Busca por nome independente de maiúscula/minúscula |
-| **Persistência Automática** | Salva em arquivo JSON ao adicionar/remover |
-| **Formatação Visual** | Ranking exibido em formato legível no console |
 
 ---
 
