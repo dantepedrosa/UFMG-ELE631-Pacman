@@ -262,6 +262,44 @@ class GameScreen(Screen):
         )
         self.end_button.pack(side='right')
 
+        self.controls_label = tk.Label(
+            footer,
+            text='Use setas ou WASD para mover',
+            font=('Consolas', 10),
+            fg=TEXT_COLOR,
+            bg=PANEL_COLOR,
+        )
+        self.controls_label.pack(side='left')
+
+        self.master.bind_all('<Key>', self._on_key_press)
+
+    def _on_key_press(self, event):
+        if not self.game or not self.game.running:
+            return
+
+        key = event.keysym.upper()
+        direcoes = {
+            'UP': 'UP',
+            'DOWN': 'DOWN',
+            'LEFT': 'LEFT',
+            'RIGHT': 'RIGHT',
+            'W': 'UP',
+            'S': 'DOWN',
+            'A': 'LEFT',
+            'D': 'RIGHT',
+        }
+        direcao = direcoes.get(key)
+        if not direcao:
+            return
+
+        self.game.mover_pacman(direcao)
+        mapa_text, status_text = self.game.update()
+        self.update_map(mapa_text)
+        self.set_status(status_text)
+
+        if not self.game.running:
+            self.stop_loop()
+
     def update_map(self, mapa_text):
         self.map_area.config(state='normal')
         self.map_area.delete('1.0', tk.END)

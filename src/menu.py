@@ -4,7 +4,7 @@ import tkinter as tk
 from tkinter import messagebox
 
 from jogo import Jogo
-from screens import MainMenuScreen, GameScreen, BG_COLOR
+from screen import MainMenuScreen, GameScreen, BG_COLOR
 
 SCORES_FILE = 'scores.csv'
 
@@ -35,7 +35,7 @@ class MenuApp:
         return read_scores()
 
     def start_game(self, player_name):
-        self.game = Jogo(player_name, fase=1, mapa_vazio=True)
+        self.game = Jogo(player_name, fase=1, mapa_vazio=False)
         mapa_inicial = self.game.iniciar()
 
         self.main_screen.hide()

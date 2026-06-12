@@ -1,14 +1,8 @@
-
 from datetime import datetime
 from DatabaseManager import DatabaseManager
 
 
 class ManagerScore:
-    """
-    Gerenciador de Scores do jogo Pac-Man.
-    Responsável por gerenciar, ordenar e consultar scores dos jogadores.
-    """
-    
     def __init__(self, db_manager=None):
         self.db = db_manager if db_manager else DatabaseManager()
         self.scores = self.db.carregar()

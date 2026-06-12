@@ -61,23 +61,52 @@ class Tabuleiro:
     def carregar_mapa(self):
         return self.mapa
 
-    def renderizar(self, fancy=False):
-        """Retorna o mapa como texto."""
-        if not fancy:
-            return '\n'.join(''.join(linha) for linha in self.mapa)
+    def obter_mapa_copiado(self):
+        return [linha.copy() for linha in self.mapa]
 
-        height = len(self.mapa)
-        width = len(self.mapa[0]) if self.mapa else 0
+    def eh_valido(self, x, y):
+        if y < 0 or y >= self.LINHAS:
+            return False
+        if x < 0 or x >= len(self.mapa[y]):
+            return False
+        return self.mapa[y][x] != '#'
+
+    def get_elemento(self, x, y):
+        if y < 0 or y >= self.LINHAS or x < 0 or x >= len(self.mapa[y]):
+            return None
+        return self.mapa[y][x]
+
+    def set_elemento(self, x, y, valor):
+        if y < 0 or y >= self.LINHAS:
+            return
+        if x < 0 or x >= len(self.mapa[y]):
+            return
+        self.mapa[y][x] = valor
+
+    def coletar_item(self, x, y):
+        item = self.get_elemento(x, y)
+        if item in {'.', 'o'}:
+            self.set_elemento(x, y, ' ')
+        return item
+
+    def renderizar(self, fancy=False, mapa=None):
+        """Retorna o mapa como texto."""
+        mapa_atual = self.mapa if mapa is None else mapa
+        if not fancy:
+            return '\n'.join(''.join(linha) for linha in mapa_atual)
+
+        height = len(mapa_atual)
+        width = len(mapa_atual[0]) if mapa_atual else 0
 
         def wall_ch(y, x):
-            if self.mapa[y][x] != '#':
+            if mapa_atual[y][x] != '#':
                 return '  '
 
-            row_len = len(self.mapa[y])
-            top = y > 0 and x < len(self.mapa[y - 1]) and self.mapa[y - 1][x] in {'#', 'G'}
-            bottom = y < height - 1 and x < len(self.mapa[y + 1]) and self.mapa[y + 1][x] in {'#', 'G'}
-            left = x > 0 and self.mapa[y][x - 1] in {'#', 'G'}
-            right = x < row_len - 1 and self.mapa[y][x + 1] in {'#', 'G'}
+            row_len = len(mapa_atual[y])
+            top = y > 0 and x < len(mapa_atual[y - 1]) and mapa_atual[y - 1][x] in {'#', 'G'}
+            bottom = y < height - 1 and x < len(mapa_atual[y + 1]) and mapa_atual[y + 1][x] in {'#', 'G'}
+            left = x > 0 and mapa_atual[y][x - 1] in {'#', 'G'}
+            right = x < row_len - 1 and mapa_atual[y][x + 1] in {'#', 'G'}
 
             if top and bottom and left and right:
                 return '┼ '
@@ -104,7 +133,7 @@ class Tabuleiro:
             return '┼ '
 
         out_lines = []
-        for y, linha in enumerate(self.mapa):
+        for y, linha in enumerate(mapa_atual):
             row = []
             for x, ch in enumerate(linha):
                 if ch == '#':
@@ -115,10 +144,14 @@ class Tabuleiro:
                     row.append('● ')
                 elif ch == 'G':
                     row.append('▓▓')
+                elif ch == 'P':
+                    row.append('P ')
+                elif ch == ' ': 
+                    row.append('  ')
                 elif ch == '-':
                     row.append('──')
                 else:
-                    row.append('  ')
+                    row.append(f'{ch} ')
             out_lines.append(''.join(row))
         return '\n'.join(out_lines)
 
