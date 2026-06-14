@@ -6,16 +6,9 @@ from tkinter import messagebox
 from jogo import Jogo
 from screen import MainMenuScreen, GameScreen, BG_COLOR
 
-SCORES_FILE = 'scores.csv'
+from ManagerScore import ManagerScore
 
-
-def read_scores(path=SCORES_FILE):
-    if not os.path.exists(path):
-        return []
-
-    with open(path, newline='', encoding='utf-8') as f:
-        reader = csv.DictReader(f)
-        return list(reader)
+# Removido leitura de scores.csv para usar ManagerScore unificado
 
 
 class MenuApp:
@@ -32,7 +25,11 @@ class MenuApp:
         self.main_screen.show()
 
     def read_scores(self):
-        return read_scores()
+        try:
+            ms = ManagerScore()
+            return ms.obter_top_scores(10)
+        except Exception:
+            return []
 
     def start_game(self, player_name):
         self.game = Jogo(player_name, fase=1, mapa_vazio=False)
@@ -45,11 +42,26 @@ class MenuApp:
         self.game_screen.start_loop(self.game)
 
     def end_game(self):
-        if self.game:
+        # Pega a referência atualizada do jogo a partir da tela (pois o nível pode ter mudado)
+        current_game = self.game_screen.game if hasattr(self, 'game_screen') else self.game
+        if current_game:
+            from ManagerScore import ManagerScore
+            try:
+                ms = ManagerScore()
+                ms.adicionar_score(
+                    nome=current_game.jogador,
+                    pontos=current_game.pacman.pontos,
+                    nivel=current_game.fase,
+                    vitoria=getattr(current_game, 'vitoria', False)
+                )
+            except Exception as e:
+                print(f"Erro ao salvar score: {e}")
+
             self.game.stop()
             self.game = None
 
         self.game_screen.hide()
+        self.main_screen.load_scores()
         self.main_screen.show()
 
 

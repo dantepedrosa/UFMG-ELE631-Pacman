@@ -9,9 +9,12 @@ class Fantasma(Entidade):
         super().__init__(x, y, 'G')
         self.cor = cor
         self.estado = estado
+        self.start_x = x
+        self.start_y = y
+        self.ultima_posicao = None
 
     def mover(self, tabuleiro: Tabuleiro, pacman=None):
-        if pacman is not None and self.estado == 'normal':
+        if pacman is not None and self.estado == 'normal' and getattr(pacman, 'modo_furia', False) == False:
             return self.perseguir(pacman, tabuleiro)
         return self._mover_aleatorio(tabuleiro)
 
@@ -20,10 +23,17 @@ class Fantasma(Entidade):
         if not movimentos:
             return False
 
-        melhor = min(
-            movimentos,
-            key=lambda pos: abs(pos[0] - pacman.get_x()) + abs(pos[1] - pacman.get_y()),
-        )
+        if len(movimentos) > 1 and self.ultima_posicao in movimentos:
+            movimentos.remove(self.ultima_posicao)
+
+        if random.random() < 0.5:
+            melhor = random.choice(movimentos)
+        else:
+            melhor = min(
+                movimentos,
+                key=lambda pos: abs(pos[0] - pacman.get_x()) + abs(pos[1] - pacman.get_y()),
+            )
+        self.ultima_posicao = (self._x, self._y)
         self.set_posicao(*melhor)
         return True
 
@@ -32,7 +42,12 @@ class Fantasma(Entidade):
         if not movimentos:
             return False
 
-        self.set_posicao(*random.choice(movimentos))
+        if len(movimentos) > 1 and self.ultima_posicao in movimentos:
+            movimentos.remove(self.ultima_posicao)
+
+        escolha = random.choice(movimentos)
+        self.ultima_posicao = (self._x, self._y)
+        self.set_posicao(*escolha)
         return True
 
     def _obter_movimentos_validos(self, tabuleiro: Tabuleiro):

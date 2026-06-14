@@ -12,6 +12,12 @@ class Jogo:
         self.fantasmas = []
         self.ghost_speed = self._ghost_speed_for_phase(fase)
         self.tabuleiro.inicializar(vazio=mapa_vazio)
+        
+        # Coletar item da posição inicial para evitar que fique faltando
+        item_inicial = self.tabuleiro.coletar_item(self.pacman.get_x(), self.pacman.get_y())
+        if item_inicial:
+            self.pacman.coletar(item_inicial)
+
         self._carregar_fantasmas()
         self.running = False
         self.tick = 0
@@ -42,6 +48,13 @@ class Jogo:
 
         item = self.tabuleiro.coletar_item(self.pacman.get_x(), self.pacman.get_y())
         self.pacman.coletar(item)
+        self._verificar_colisoes()
+        
+        if self.running and not self.tabuleiro.tem_itens():
+            self.vitoria = True
+            self.stop()
+            
+        self._atualizar_status()
         return True
 
     def renderizar_jogo(self, fancy=False):
@@ -53,7 +66,10 @@ class Jogo:
         for fantasma in self.fantasmas:
             gx, gy = fantasma.obter_posicao()
             if 0 <= gy < len(mapa) and 0 <= gx < len(mapa[gy]):
-                mapa[gy][gx] = 'G'
+                if self.pacman.modo_furia:
+                    mapa[gy][gx] = 'F'
+                else:
+                    mapa[gy][gx] = 'G'
 
         return self.tabuleiro.renderizar(fancy=fancy, mapa=mapa)
 
@@ -73,13 +89,16 @@ class Jogo:
         for fantasma in self.fantasmas:
             if fantasma.colidir_com(self.pacman):
                 if self.pacman.modo_furia:
-                    fantasma.set_posicao(13, 11)
+                    fantasma.set_posicao(fantasma.start_x, fantasma.start_y)
                     self.pacman.pontos += 200
                 else:
                     self.pacman.perder_vida()
                     if not self.pacman.esta_vivo():
                         self.stop()
-                    self.pacman.set_posicao(1, 1)
+                    else:
+                        self.pacman.set_posicao(1, 1)
+                        for f in self.fantasmas:
+                            f.set_posicao(f.start_x, f.start_y)
                     break
 
     def _atualizar_status(self):
@@ -90,7 +109,8 @@ class Jogo:
             f'Fantasma a cada {self.ghost_speed:.2f}s'
         )
         if self.pacman.modo_furia:
-            self.status_msg += f' | Fúria {self.pacman.duracao_furia}'
+            segundos_restantes = self.pacman.duracao_furia * self.ghost_speed
+            self.status_msg += f' | FÚRIA: {segundos_restantes:.1f}s'
 
     def stop(self):
         self.running = False

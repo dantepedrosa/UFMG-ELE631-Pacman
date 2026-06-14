@@ -7,7 +7,10 @@ class ManagerScore:
         self.db = db_manager if db_manager else DatabaseManager()
         self.scores = self.db.carregar()
     
-    def adicionar_score(self, nome, pontos, nivel=1):
+    def adicionar_score(self, nome, pontos, nivel, vitoria=False):
+        """
+        Adiciona um novo score e o salva imediatamente.
+        """
         if not nome or pontos < 0:
             return False
         
@@ -15,6 +18,7 @@ class ManagerScore:
             'nome': nome,
             'pontos': pontos,
             'nivel': nivel,
+            'vitoria': vitoria,
             'data': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         }
         

@@ -181,9 +181,11 @@ class MainMenuScreen(Screen):
             pontos = row.get('pontos', '0')
             data = row.get('data', '')
             nivel = row.get('nivel', '')
+            vitoria = row.get('vitoria', False)
+            status_v = " (VENCEU!)" if vitoria else ""
             self.score_listbox.insert(
                 tk.END,
-                f'{nome:<12} {pontos:>5} pts   {data}   Nível {nivel}',
+                f'{nome:<12} {pontos:>5} pts   {data}   Nível {nivel}{status_v}',
             )
 
     def on_start_click(self):
@@ -232,7 +234,7 @@ class GameScreen(Screen):
         self.map_area = tk.Text(
             self.frame,
             width=64,
-            height=28,
+            height=31,
             font=('Consolas', 10),
             bg='#101010',
             fg=TEXT_COLOR,
@@ -274,10 +276,20 @@ class GameScreen(Screen):
         self.master.bind_all('<Key>', self._on_key_press)
 
     def _on_key_press(self, event):
-        if not self.game or not self.game.running:
+        if getattr(self, 'input_paused', False) or not self.game:
             return
 
         key = event.keysym.upper()
+
+        if getattr(self, 'esperando_proximo_nivel', False):
+            if key == 'RETURN':
+                self.proximo_nivel()
+            elif key == 'ESCAPE':
+                self.exit_game()
+            return
+
+        if not self.game.running:
+            return
         direcoes = {
             'UP': 'UP',
             'DOWN': 'DOWN',
@@ -292,10 +304,11 @@ class GameScreen(Screen):
         if not direcao:
             return
 
+        vidas_antes = self.game.pacman.vidas
         self.game.mover_pacman(direcao)
-        mapa_text, status_text = self.game.update()
-        self.update_map(mapa_text)
-        self.set_status(status_text)
+        mapa_text = self.game.renderizar_jogo(fancy=True)
+        status_text = self.game.status()
+        self._render_and_check_status(mapa_text, status_text, vidas_antes)
 
         if not self.game.running:
             self.stop_loop()
@@ -305,6 +318,82 @@ class GameScreen(Screen):
         self.map_area.delete('1.0', tk.END)
         self.map_area.insert('1.0', mapa_text)
         self.map_area.config(state='disabled')
+
+    def _render_and_check_status(self, mapa_text, status_text, vidas_antes):
+        self.update_map(mapa_text)
+        self.set_status(status_text)
+        
+        vidas_depois = self.game.pacman.vidas
+        if vidas_depois < vidas_antes:
+            if vidas_depois > 0:
+                self.set_status(status_text + f"  [!] VOCÊ FOI PEGO! Retornando ao início...")
+                return 2000
+            else:
+                self.set_status(status_text + f"  [!] GAME OVER! Pontuação: {self.game.pacman.pontos}")
+                self.frame.after(3000, self.exit_game)
+                return -1
+
+        if getattr(self.game, 'vitoria', False):
+            if not getattr(self, 'esperando_proximo_nivel', False):
+                self.esperando_proximo_nivel = True
+                self.show_victory_screen()
+            return -1
+
+        return 0
+
+    def show_victory_screen(self):
+        text = "\n\n\n\n\n\n"
+        text += "       __   __ ___  _  _  ___  ___  _  _  _\n"
+        text += "       \\ \\ / /| __|| \\| |/ __|| __|| || || |\n"
+        text += "        \\ V / | _| | .` || (__ | _| | || ||_|\n"
+        text += "         \\_/  |___||_|\\_| \\___||___| \\___/(_)\n"
+        text += "\n\n"
+        text += f"            PONTUAÇÃO ATUAL: {self.game.pacman.pontos}\n"
+        text += f"            FASE CONCLUÍDA: {self.game.fase}\n"
+        text += "\n\n"
+        text += "         > PRESSIONE [ENTER] PARA PRÓXIMO NÍVEL\n"
+        text += "         > PRESSIONE [ESC] PARA VOLTAR AO MENU\n"
+        
+        self.map_area.config(state='normal')
+        self.map_area.delete('1.0', tk.END)
+        self.map_area.insert('1.0', text)
+        self.map_area.config(state='disabled')
+        self.set_status(f"> STATUS: Aguardando jogador decidir próximo passo...")
+
+    def proximo_nivel(self):
+        self.stop_loop()
+        
+        # Salva o progresso atual
+        if self.game:
+            from ManagerScore import ManagerScore
+            try:
+                ms = ManagerScore()
+                ms.adicionar_score(
+                    nome=self.game.jogador,
+                    pontos=self.game.pacman.pontos,
+                    nivel=self.game.fase,
+                    vitoria=True
+                )
+            except Exception as e:
+                print(f"Erro ao salvar score: {e}")
+        
+        pontos_atuais = self.game.pacman.pontos
+        vidas_atuais = self.game.pacman.vidas
+        fase_nova = self.game.fase + 1
+        nome = self.game.jogador
+        
+        from jogo import Jogo
+        novo_jogo = Jogo(jogador=nome, fase=fase_nova, mapa_vazio=False)
+        novo_jogo.pacman.pontos = pontos_atuais
+        novo_jogo.pacman.vidas = vidas_atuais
+        
+        self.esperando_proximo_nivel = False
+        self.game = novo_jogo
+        self.game.running = True
+        self.input_paused = False
+        self.update_map(self.game.renderizar_jogo(fancy=True))
+        self.set_status(self.game.status())
+        self._run_step()
 
     def set_status(self, text):
         self.status_label.config(text=text)
@@ -317,10 +406,20 @@ class GameScreen(Screen):
         if not self.game or not self.game.running:
             return
 
+        vidas_antes = self.game.pacman.vidas
         mapa_text, status_text = self.game.update()
-        self.update_map(mapa_text)
-        self.set_status(status_text)
-        self.loop_id = self.frame.after(int(self.game.ghost_speed * 1000), self._run_step)
+        delay = self._render_and_check_status(mapa_text, status_text, vidas_antes)
+        
+        if self.game and self.game.running and delay != -1:
+            if delay > 0:
+                self.input_paused = True
+                self.loop_id = self.frame.after(delay, self._resume_and_run)
+            else:
+                self.loop_id = self.frame.after(int(self.game.ghost_speed * 1000), self._run_step)
+
+    def _resume_and_run(self):
+        self.input_paused = False
+        self._run_step()
 
     def stop_loop(self):
         if self.loop_id is not None:

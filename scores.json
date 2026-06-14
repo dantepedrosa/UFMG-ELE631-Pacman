@@ -1,0 +1,112 @@
+[
+    {
+        "nome": "arthur",
+        "pontos": 8020,
+        "nivel": 3,
+        "vitoria": false,
+        "data": "2026-06-14 16:32:43"
+    },
+    {
+        "nome": "arthur",
+        "pontos": 6950,
+        "nivel": 2,
+        "vitoria": true,
+        "data": "2026-06-14 16:32:11"
+    },
+    {
+        "nome": "arthur",
+        "pontos": 6550,
+        "nivel": 2,
+        "vitoria": true,
+        "data": "2026-06-14 16:23:10"
+    },
+    {
+        "nome": "arthur",
+        "pontos": 4010,
+        "nivel": 1,
+        "data": "2026-06-14 15:31:21"
+    },
+    {
+        "nome": "arthur",
+        "pontos": 3730,
+        "nivel": 1,
+        "data": "2026-06-14 15:28:21"
+    },
+    {
+        "nome": "arthur",
+        "pontos": 3610,
+        "nivel": 1,
+        "data": "2026-06-14 15:35:31"
+    },
+    {
+        "nome": "arthur",
+        "pontos": 3580,
+        "nivel": 1,
+        "vitoria": true,
+        "data": "2026-06-14 16:08:32"
+    },
+    {
+        "nome": "arthur",
+        "pontos": 3460,
+        "nivel": 1,
+        "data": "2026-06-14 15:50:52"
+    },
+    {
+        "nome": "arthur",
+        "pontos": 3380,
+        "nivel": 1,
+        "vitoria": true,
+        "data": "2026-06-14 16:29:46"
+    },
+    {
+        "nome": "arthur",
+        "pontos": 3180,
+        "nivel": 1,
+        "vitoria": true,
+        "data": "2026-06-14 16:16:51"
+    },
+    {
+        "nome": "arthur",
+        "pontos": 3180,
+        "nivel": 1,
+        "vitoria": true,
+        "data": "2026-06-14 16:17:25"
+    },
+    {
+        "nome": "arthur",
+        "pontos": 3180,
+        "nivel": 1,
+        "vitoria": true,
+        "data": "2026-06-14 16:21:22"
+    },
+    {
+        "nome": "arthur",
+        "pontos": 3150,
+        "nivel": 1,
+        "data": "2026-06-14 15:48:32"
+    },
+    {
+        "nome": "arthur",
+        "pontos": 2950,
+        "nivel": 1,
+        "data": "2026-06-14 15:42:52"
+    },
+    {
+        "nome": "arthur",
+        "pontos": 2780,
+        "nivel": 1,
+        "data": "2026-06-14 15:59:43"
+    },
+    {
+        "nome": "Arthur",
+        "pontos": 1860,
+        "nivel": 1,
+        "data": "2026-06-14 15:22:50"
+    },
+    {
+        "nome": "arthur",
+        "pontos": 1000,
+        "nivel": 1,
+        "data": "2026-06-14 15:37:31"
+    }
+]

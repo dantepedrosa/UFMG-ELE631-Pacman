@@ -23,9 +23,9 @@ class Tabuleiro:
             "     #.##### ## #####.#     ",
             "     #.##          ##.#     ",
             "     #.## ###--### ##.#     ",
-            "######.## #GGGG# ##.######",
-            "       .   #GGGG#   .       ",
-            "######.## ###### ##.######",
+            "######.##  #GGGG#  ##.######",
+            "      .    #    #    .      ",
+            "######.##  ######  ##.######",
             "     #.##          ##.#     ",
             "     #.## ######## ##.#     ",
             "######.## ######## ##.######",
@@ -89,6 +89,12 @@ class Tabuleiro:
             self.set_elemento(x, y, ' ')
         return item
 
+    def tem_itens(self):
+        for linha in self.mapa:
+            if '.' in linha or 'o' in linha:
+                return True
+        return False
+
     def renderizar(self, fancy=False, mapa=None):
         """Retorna o mapa como texto."""
         mapa_atual = self.mapa if mapa is None else mapa
@@ -144,6 +150,8 @@ class Tabuleiro:
                     row.append('● ')
                 elif ch == 'G':
                     row.append('▓▓')
+                elif ch == 'F':
+                    row.append('░░')
                 elif ch == 'P':
                     row.append('P ')
                 elif ch == ' ': 
