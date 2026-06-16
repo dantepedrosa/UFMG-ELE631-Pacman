@@ -1,12 +1,16 @@
 import csv
 import os
+import sys
+
+# Adiciona a pasta src ao path do Python para resolver os imports internos (como 'from tabuleiro import Tabuleiro')
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'src'))
 import tkinter as tk
 from tkinter import messagebox
 
-from jogo import Jogo
-from screen import MainMenuScreen, GameScreen, BG_COLOR
+from src.jogo import Jogo
+from src.screen import MainMenuScreen, GameScreen, BG_COLOR
 
-from ManagerScore import ManagerScore
+from src.ManagerScore import ManagerScore
 
 # Removido leitura de scores.csv para usar ManagerScore unificado
 
@@ -45,7 +49,6 @@ class MenuApp:
         # Pega a referência atualizada do jogo a partir da tela (pois o nível pode ter mudado)
         current_game = self.game_screen.game if hasattr(self, 'game_screen') else self.game
         if current_game:
-            from ManagerScore import ManagerScore
             try:
                 ms = ManagerScore()
                 ms.adicionar_score(
@@ -57,7 +60,8 @@ class MenuApp:
             except Exception as e:
                 print(f"Erro ao salvar score: {e}")
 
-            self.game.stop()
+            if self.game:
+                self.game.stop()
             self.game = None
 
         self.game_screen.hide()
