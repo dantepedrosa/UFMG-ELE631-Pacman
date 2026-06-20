@@ -1,0 +1,14 @@
+# Requirements.txt - Dependências do Projeto PAC-MAN
+# 
+# Nota: Este projeto usa apenas módulos built-in do Python.
+# Tkinter vem pré-instalado com Python 3.
+# 
+# Se você estiver em um Linux e tkinter não estiver disponível:
+#   Ubuntu/Debian: sudo apt-get install python3-tk
+#   Fedora/RHEL: sudo yum install python3-tkinter
+#   Arch: sudo pacman -S tk
+#
+# Após instalar tkinter, execute:
+#   python3 -m venv venv
+#   source venv/bin/activate  # No Windows: venv\Scripts\activate
+#   pip install -r requirements.txt
