@@ -1,6 +1,6 @@
-from tabuleiro import Tabuleiro
-from pacman import Pacman
-from fantasma import Fantasma
+from .tabuleiro import Tabuleiro
+from .pacman import Pacman
+from .fantasma import Fantasma
 
 
 class Jogo:

@@ -1,4 +1,4 @@
-from pellet import Pellet
+from .pellet import Pellet
 
 
 class PowerPellet(Pellet):

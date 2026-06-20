@@ -1,4 +1,4 @@
-from entidade import Entidade
+from .entidade import Entidade
 
 
 class Pellet(Entidade):

@@ -1,5 +1,5 @@
 from datetime import datetime
-from DatabaseManager import DatabaseManager
+from .database_manager import DatabaseManager
 
 
 class ManagerScore:

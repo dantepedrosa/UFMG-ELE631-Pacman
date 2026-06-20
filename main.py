@@ -2,17 +2,14 @@ import csv
 import os
 import sys
 
-# Adiciona a pasta src ao path do Python para resolver os imports internos (como 'from tabuleiro import Tabuleiro')
+# Adiciona a pasta src ao path do Python para resolver os imports internos
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'src'))
 import tkinter as tk
 from tkinter import messagebox
 
-from src.jogo import Jogo
-from src.screen import MainMenuScreen, GameScreen, BG_COLOR
-
-from src.ManagerScore import ManagerScore
-
-# Removido leitura de scores.csv para usar ManagerScore unificado
+from src.models.jogo import Jogo
+from src.views.screen import MainMenuScreen, GameScreen, BG_COLOR
+from src.database.manager_score import ManagerScore
 
 
 class MenuApp:

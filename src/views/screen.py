@@ -365,7 +365,7 @@ class GameScreen(Screen):
         
         # Salva o progresso atual
         if self.game:
-            from ManagerScore import ManagerScore
+            from src.database.manager_score import ManagerScore
             try:
                 ms = ManagerScore()
                 ms.adicionar_score(
@@ -382,7 +382,7 @@ class GameScreen(Screen):
         fase_nova = self.game.fase + 1
         nome = self.game.jogador
         
-        from jogo import Jogo
+        from src.models.jogo import Jogo
         novo_jogo = Jogo(jogador=nome, fase=fase_nova, mapa_vazio=False)
         novo_jogo.pacman.pontos = pontos_atuais
         novo_jogo.pacman.vidas = vidas_atuais

@@ -1,7 +1,7 @@
 import random
 
-from entidade import Entidade
-from tabuleiro import Tabuleiro
+from .entidade import Entidade
+from .tabuleiro import Tabuleiro
 
 
 class Fantasma(Entidade):

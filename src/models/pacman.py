@@ -1,5 +1,5 @@
-from tabuleiro import Tabuleiro
-from entidade import Entidade
+from .tabuleiro import Tabuleiro
+from .entidade import Entidade
 
 
 class Pacman(Entidade):
