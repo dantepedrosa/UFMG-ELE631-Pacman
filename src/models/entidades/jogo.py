@@ -1,4 +1,4 @@
-from .tabuleiro import Tabuleiro
+from src.models.tabuleiro.tabuleiro import Tabuleiro
 from .pacman import Pacman
 from .fantasma import Fantasma
 
