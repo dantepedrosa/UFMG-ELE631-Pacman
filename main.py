@@ -7,7 +7,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'src
 import tkinter as tk
 from tkinter import messagebox
 
-from src.models.entidades.jogo import Jogo
+from src.models.jogo import Jogo
 from src.views.screen import MainMenuScreen, GameScreen, BG_COLOR
 from src.database.manager_score import ManagerScore
 
