@@ -233,7 +233,7 @@ class GameScreen(Screen):
 
         self.map_area = tk.Text(
             self.frame,
-            width=64,
+            width=86,
             height=31,
             font=('Consolas', 10),
             bg='#101010',

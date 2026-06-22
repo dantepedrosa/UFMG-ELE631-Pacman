@@ -12,50 +12,6 @@ class TabuleiroRenderizador:
         height = len(mapa_atual)
         width = len(mapa_atual[0]) if mapa_atual else 0
 
-        def wall_ch(y, x):
-            if mapa_atual[y][x] != "#":
-                return "  "
-
-            row_len = len(mapa_atual[y])
-
-            top = (
-                y > 0
-                and x < len(mapa_atual[y - 1])
-                and mapa_atual[y - 1][x] in {"#", "G"}
-            )
-            bottom = (
-                y < height - 1
-                and x < len(mapa_atual[y + 1])
-                and mapa_atual[y + 1][x] in {"#", "G"}
-            )
-            left = x > 0 and mapa_atual[y][x - 1] in {"#", "G"}
-            right = x < row_len - 1 and mapa_atual[y][x + 1] in {"#", "G"}
-
-            if top and bottom and left and right:
-                return "┼ "
-            if top and bottom and left:
-                return "├ "
-            if top and bottom and right:
-                return "┤ "
-            if left and right and top:
-                return "┬ "
-            if left and right and bottom:
-                return "┴ "
-            if bottom and right:
-                return "┌ "
-            if bottom and left:
-                return "┐ "
-            if top and right:
-                return "└ "
-            if top and left:
-                return "┘ "
-            if left and right:
-                return "─ "
-            if top and bottom:
-                return "│ "
-
-            return "┼ "
-
         out_lines = []
 
         for y, linha in enumerate(mapa_atual):
@@ -63,18 +19,18 @@ class TabuleiroRenderizador:
 
             for x, ch in enumerate(linha):
                 if ch == "#":
-                    row.append(wall_ch(y, x))
+                    row.append("███")
                 elif ch == ".":
-                    row.append("· ")
+                    row.append(" · ")
                 elif ch == "o":
-                    row.append("● ")
+                    row.append(" ● ")
                 elif ch == " ":
-                    row.append("  ")
+                    row.append("   ")
                 elif ch == "-":
-                    row.append("──")
+                    row.append("───")
                 else:
                     # Para C, B, P, @, F e qualquer entidade nova:
-                    row.append(f"{ch} ")
+                    row.append(f" {ch} ")
 
             out_lines.append("".join(row))
 

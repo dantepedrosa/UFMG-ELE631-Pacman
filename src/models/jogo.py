@@ -179,6 +179,7 @@ class Jogo:
             '·': '#FFB8AE',  # Cor do pellet (rosa claro)
             '●': '#FFB8FF',  # Cor do power pellet
             '@': '#00FF00',  # Cor da fruta
+            '█': '#1919A6',  # Fundo preto
         }
         
         # Busca dinamicamente a cor de cada fantasma instanciado
@@ -190,10 +191,5 @@ class Jogo:
             else:
                 # Caso contrário, usa a cor padrão deles (Vermelho, Rosa, etc.)
                 cores[simbolo] = getattr(f, 'cor', '#FF0000')
-            
-        # Mapeamento para as paredes (caracteres fancy do TabuleiroRenderizador)
-        cor_parede = '#1919A6'  # Azul escuro estilo Arcade
-        for char in '┼├┤┬┴┌┐└┘─│#':
-            cores[char] = cor_parede
             
         return cores
