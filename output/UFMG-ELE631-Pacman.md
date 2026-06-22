@@ -29,6 +29,11 @@ classDiagram
         + mover(self, tabuleiro, pacman)
     }
 
+    class Clyde {
+        - \_\_init__(self, x, y) None
+        + mover(self, tabuleiro, pacman)
+    }
+
     class IComportamentoMovimento {
         <<abstract>>
         + calcularDestino(self, fantasma, tabuleiro, pacman)*
@@ -70,16 +75,22 @@ classDiagram
     class GameScreen {
         - \_\_init__(self, master, on_exit) None
         + create_widgets(self)
-        + atualizar_interface_status(self, mensagem_alerta)
-        + update_map(self, mapa_text, mapa_cores)
+        - \_on_key_press(self, event)
+        + update_map(self, mapa_text)
+        - \_render_and_check_status(self, mapa_text, status_text, vidas_antes)
+        + show_victory_screen(self)
+        + proximo_nivel(self)
+        + set_status(self, text)
         + start_loop(self, game)
         - \_run_step(self)
         - \_resume_and_run(self)
-        - \_on_key_press(self, event)
-        - \_render_and_check_status(self, mapa_text, status_text, vidas_antes, mapa_cores)
-        + proximo_nivel(self)
-        + exit_game(self)
         + stop_loop(self)
+        + exit_game(self)
+    }
+
+    class Inky {
+        - \_\_init__(self, x, y) None
+        + mover(self, tabuleiro, pacman)
     }
 
     class Jogo {
@@ -102,7 +113,8 @@ classDiagram
         - \_\_init__(self, master, on_start, read_scores) None
         + create_widgets(self)
         + load_scores(self)
-        - \_on_start_click(self)
+        + on_start_click(self)
+        + set_status(self, value)
     }
 
     class ManagerScore {
@@ -181,6 +193,10 @@ classDiagram
     Blinky --|> Fantasma
 
     Pinky --|> Fantasma
+
+    Inky --|> Fantasma
+
+    Clyde --|> Fantasma
 
     Fruta --|> Item
 
