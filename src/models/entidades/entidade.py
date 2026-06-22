@@ -1,10 +1,12 @@
 from abc import ABC, abstractmethod
 
 class Entidade(ABC):
-    def __init__(self, x, y, simbolo):
+    # Valores default: caracter '?' e cor branca
+    def __init__(self, x, y, caracter='?', cor='#FFFFFF'):
         self._x = x
         self._y = y
-        self.simbolo = simbolo
+        self.caracter = caracter
+        self.cor = cor
 
     def get_x(self):
         return self._x
@@ -20,7 +22,7 @@ class Entidade(ABC):
         self._y = y
 
     def desenhar(self):
-        return self.simbolo
+        return self.caracter
 
     def colidir_com(self, outra):
         return self._x == outra.get_x() and self._y == outra.get_y()

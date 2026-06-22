@@ -1,8 +1,8 @@
 from .personagem import Personagem
 
 class Fantasma(Personagem):
-    def __init__(self, x, y, cor='vermelho', estado='normal'):
-        super().__init__(x, y, 'G')
+    def __init__(self, x, y, cor, estado='normal'):
+        super().__init__(x, y, simbolo='G', cor=cor)
         self.cor = cor
         self.estado = estado
         self.ultima_posicao = None

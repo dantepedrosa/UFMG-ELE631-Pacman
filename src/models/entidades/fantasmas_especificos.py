@@ -3,7 +3,7 @@ from .comportamentos import ComportamentoChase, ComportamentoScatter
 
 class Blinky(Fantasma):
     def __init__(self, x, y):
-        super().__init__(x, y, cor='vermelho')
+        super().__init__(x, y, cor='#FF0000')
         self.simbolo = 'B'
         self.comportamentoAtual = ComportamentoChase()
 
@@ -21,7 +21,7 @@ class Blinky(Fantasma):
 
 class Pinky(Fantasma):
     def __init__(self, x, y):
-        super().__init__(x, y, cor='rosa')
+        super().__init__(x, y, cor='#FFB8FF')
         self.simbolo = 'P'
         self.comportamentoAtual = ComportamentoScatter()
 

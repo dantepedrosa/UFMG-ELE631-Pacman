@@ -317,6 +317,24 @@ class GameScreen(Screen):
         self.map_area.config(state='normal')
         self.map_area.delete('1.0', tk.END)
         self.map_area.insert('1.0', mapa_text)
+        
+        if self.game:
+            # 1. Obtém o dicionário de cores atualizado (que já muda se estiver em fúria)
+            cores = self.game.obter_mapa_cores()
+            
+            # 2. Configura/atualiza as tags no widget de texto
+            for char, cor in cores.items():
+                self.map_area.tag_configure(f'cor_{char}', foreground=cor)
+                
+            # 3. Varre o texto renderizado para colorir
+            linhas = mapa_text.split('\n')
+            for r, linha in enumerate(linhas):
+                for c, char in enumerate(linha):
+                    if char in cores:
+                        start_idx = f'{r + 1}.{c}'
+                        end_idx = f'{r + 1}.{c + 1}'
+                        self.map_area.tag_add(f'cor_{char}', start_idx, end_idx)
+                        
         self.map_area.config(state='disabled')
 
     def _render_and_check_status(self, mapa_text, status_text, vidas_antes):

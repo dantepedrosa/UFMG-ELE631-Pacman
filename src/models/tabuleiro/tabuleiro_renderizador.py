@@ -68,20 +68,17 @@ class TabuleiroRenderizador:
                     row.append("· ")
                 elif ch == "o":
                     row.append("● ")
-                elif ch == "G":
-                    row.append("▓▓")
-                elif ch == "F":
-                    row.append("░░")
-                elif ch == "P":
-                    row.append("P ")
                 elif ch == " ":
                     row.append("  ")
                 elif ch == "-":
                     row.append("──")
                 else:
+                    # Para C, B, P, @, F e qualquer entidade nova:
                     row.append(f"{ch} ")
 
             out_lines.append("".join(row))
+
+        return "\n".join(out_lines)
 
         return "\n".join(out_lines)
 

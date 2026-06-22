@@ -9,7 +9,7 @@ class Pacman(Personagem):
     }
 
     def __init__(self, x, y, vidas=3, pontos=0):
-        super().__init__(x, y, 'C')
+        super().__init__(x, y, simbolo='C', cor='#FFFF00')
         self.vidas = vidas
         self.pontos = pontos
         self.modo_furia = False

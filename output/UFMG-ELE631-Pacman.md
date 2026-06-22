@@ -5,7 +5,7 @@ title: UFMG-ELE631-Pacman
 classDiagram
     class Entidade {
         <<abstract>>
-        - \_\_init__(self, x, y, simbolo) None
+        - \_\_init__(self, x, y, caracter, cor) None
         + get_x(self)
         + get_y(self)
         + obter_posicao(self)
@@ -84,6 +84,7 @@ classDiagram
 
     class Jogo {
         - \_\_init__(self, jogador, fase, mapa_vazio) None
+        - \_processar_coleta(self, simbolo, x, y)
         - \_ghost_speed_for_phase(self, fase)
         - \_carregar_fantasmas(self)
         + iniciar(self)

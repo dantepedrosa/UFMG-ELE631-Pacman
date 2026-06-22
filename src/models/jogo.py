@@ -166,3 +166,34 @@ class Jogo:
             f'> STATUS: Jogador {self.jogador} | Fase {self.fase} | '
             f'Vidas {self.pacman.vidas} | Pontos {self.pacman.pontos}'
         )
+    
+    def obter_mapa_cores(self):
+        """Retorna um dicionário mapeando os caracteres do tabuleiro para suas cores."""
+        # Verifica se o Pacman existe e está no modo furia
+        furia_ativo = getattr(self.pacman, 'modo_furia', False)
+        cor_fantasma_medo = '#0000FF'  # Azul Arcade clássico
+
+        # Cores padrão para o Pacman e Itens do mapa
+        cores = {
+            'C': getattr(self.pacman, 'cor', '#FFFF00'),  # Amarelo
+            '·': '#FFB8AE',  # Cor do pellet (rosa claro)
+            '●': '#FFB8FF',  # Cor do power pellet
+            '@': '#00FF00',  # Cor da fruta
+        }
+        
+        # Busca dinamicamente a cor de cada fantasma instanciado
+        for f in self.fantasmas:
+            simbolo = getattr(f, 'simbolo', 'G')
+            if furia_ativo:
+                # Se estiver em modo fúria, a cor na tela vira azul
+                cores[simbolo] = cor_fantasma_medo
+            else:
+                # Caso contrário, usa a cor padrão deles (Vermelho, Rosa, etc.)
+                cores[simbolo] = getattr(f, 'cor', '#FF0000')
+            
+        # Mapeamento para as paredes (caracteres fancy do TabuleiroRenderizador)
+        cor_parede = '#1919A6'  # Azul escuro estilo Arcade
+        for char in '┼├┤┬┴┌┐└┘─│#':
+            cores[char] = cor_parede
+            
+        return cores
