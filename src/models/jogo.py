@@ -1,8 +1,10 @@
 from .tabuleiro.tabuleiro_renderizador import TabuleiroRenderizador
 from .tabuleiro.tabuleiro import Tabuleiro
 from .entidades.pacman import Pacman
-from .entidades.fantasma import Fantasma
-
+from .entidades.fantasmas_especificos import Blinky, Pinky
+from .entidades.pellet import Pellet
+from .entidades.power_pellet import PowerPellet
+from .entidades.fruta import Fruta
 
 class Jogo:
     def __init__(self, jogador, fase=1, mapa_vazio=True):
@@ -17,13 +19,12 @@ class Jogo:
 
         self.tabuleiro.inicializar(vazio=mapa_vazio)
 
-        # Coletar item inicial
+        # Atualizado: usa o novo método processador de itens
         item_inicial = self.tabuleiro.coletar_item(
             self.pacman.get_x(),
             self.pacman.get_y()
         )
-        if item_inicial:
-            self.pacman.coletar(item_inicial)
+        self._processar_coleta(item_inicial, self.pacman.get_x(), self.pacman.get_y())
 
         self._carregar_fantasmas()
 
@@ -32,17 +33,31 @@ class Jogo:
         self.status_msg = ''
         self.vitoria = False
 
+    def _processar_coleta(self, simbolo, x, y):
+        """Converte o caractere do tabuleiro em um Objeto Item real."""
+        if simbolo == '.':
+            self.pacman.coletar(Pellet(x, y))
+        elif simbolo == 'o':
+            self.pacman.coletar(PowerPellet(x, y))
+        elif simbolo == '@':
+            self.pacman.coletar(Fruta(x, y))
+
     def _ghost_speed_for_phase(self, fase):
         base_speed = 0.28
         return max(0.10, base_speed - (fase - 1) * 0.02)
 
     def _carregar_fantasmas(self):
         mapa = self.tabuleiro.carregar_mapa()
+        contador = 0
 
         for y, linha in enumerate(mapa):
             for x, valor in enumerate(linha):
                 if valor == 'G':
-                    self.fantasmas.append(Fantasma(x, y))
+                    if contador % 2 == 0:
+                        self.fantasmas.append(Blinky(x, y))
+                    else:
+                        self.fantasmas.append(Pinky(x, y))
+                    contador += 1
                     self.tabuleiro.set_elemento(x, y, ' ')
 
     def iniciar(self):
@@ -56,11 +71,12 @@ class Jogo:
         if not self.pacman.mover(direcao, self.tabuleiro):
             return False
 
-        item = self.tabuleiro.coletar_item(
+        # Atualizado: usa o novo método processador de itens
+        item_str = self.tabuleiro.coletar_item(
             self.pacman.get_x(),
             self.pacman.get_y()
         )
-        self.pacman.coletar(item)
+        self._processar_coleta(item_str, self.pacman.get_x(), self.pacman.get_y())
 
         self._verificar_colisoes()
 
@@ -76,15 +92,15 @@ class Jogo:
 
         px, py = self.pacman.obter_posicao()
         if 0 <= py < len(mapa) and 0 <= px < len(mapa[py]):
-            mapa[py][px] = 'P'
+            mapa[py][px] = 'C'
 
         for fantasma in self.fantasmas:
             gx, gy = fantasma.obter_posicao()
             if 0 <= gy < len(mapa) and 0 <= gx < len(mapa[gy]):
-                if self.pacman.modo_furia:
+                if getattr(self.pacman, 'modo_furia', False):
                     mapa[gy][gx] = 'F'
                 else:
-                    mapa[gy][gx] = 'G'
+                    mapa[gy][gx] = fantasma.simbolo
 
         return TabuleiroRenderizador.renderizar(
             self.tabuleiro,
@@ -109,10 +125,10 @@ class Jogo:
     def _verificar_colisoes(self):
         for fantasma in self.fantasmas:
             if fantasma.colidir_com(self.pacman):
-                if self.pacman.modo_furia:
+                if getattr(self.pacman, 'modo_furia', False):
                     fantasma.set_posicao(
-                        fantasma.start_x,
-                        fantasma.start_y
+                        getattr(fantasma, 'start_x', 1),
+                        getattr(fantasma, 'start_y', 1)
                     )
                     self.pacman.pontos += 200
                 else:
@@ -123,8 +139,10 @@ class Jogo:
                     else:
                         self.pacman.set_posicao(1, 1)
                         for f in self.fantasmas:
-                            f.set_posicao(f.start_x, f.start_y)
-
+                            f.set_posicao(
+                                getattr(f, 'start_x', 1), 
+                                getattr(f, 'start_y', 1)
+                            )
                 break
 
     def _atualizar_status(self):
@@ -136,7 +154,7 @@ class Jogo:
             f'Fantasma a cada {self.ghost_speed:.2f}s'
         )
 
-        if self.pacman.modo_furia:
+        if getattr(self.pacman, 'modo_furia', False):
             segundos_restantes = self.pacman.duracao_furia * self.ghost_speed
             self.status_msg += f' | FÚRIA: {segundos_restantes:.1f}s'
 

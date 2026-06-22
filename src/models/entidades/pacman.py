@@ -1,45 +1,38 @@
-from src.models.tabuleiro.tabuleiro import Tabuleiro
-from .entidade import Entidade
+from .personagem import Personagem
 
-
-class Pacman(Entidade):
+class Pacman(Personagem):
     DIRECOES = {
         'UP': (0, -1),
         'DOWN': (0, 1),
         'LEFT': (-1, 0),
-        'RIGHT': (1, 0),
+        'RIGHT': (1, 0)
     }
 
-    def __init__(self, x=1, y=1, vidas=3, pontos=0):
-        super().__init__(x, y, 'P')
+    def __init__(self, x, y, vidas=3, pontos=0):
+        super().__init__(x, y, 'C')
         self.vidas = vidas
         self.pontos = pontos
         self.modo_furia = False
         self.duracao_furia = 0
 
-    def mover(self, direcao, tabuleiro: Tabuleiro):
+    def mover(self, direcao, tabuleiro):
         if direcao not in self.DIRECOES:
             return False
-
+            
         dx, dy = self.DIRECOES[direcao]
-        novo_x = self._x + dx
-        novo_y = self._y + dy
-
-        if tabuleiro.eh_valido(novo_x, novo_y):
-            self.set_posicao(novo_x, novo_y)
+        nx, ny = self.get_x() + dx, self.get_y() + dy
+        
+        if tabuleiro.eh_valido(nx, ny):
+            self.set_posicao(nx, ny)
             return True
-
         return False
 
     def coletar(self, item):
-        if item == '.':
-            self.pontos += 10
-        elif item == 'o':
-            self.pontos += 50
-            self.ativar_furia(20)
-        return self.pontos
+        # A responsabilidade agora fica por conta do método coletar() polimórfico de cada Item
+        if item:
+            item.coletar(self)
 
-    def ativar_furia(self, duracao=20):
+    def ativar_furia(self, duracao):
         self.modo_furia = True
         self.duracao_furia = duracao
 
@@ -48,10 +41,9 @@ class Pacman(Entidade):
             self.duracao_furia -= 1
             if self.duracao_furia <= 0:
                 self.modo_furia = False
-                self.duracao_furia = 0
 
     def perder_vida(self):
-        self.vidas = max(0, self.vidas - 1)
+        self.vidas -= 1
 
     def esta_vivo(self):
         return self.vidas > 0

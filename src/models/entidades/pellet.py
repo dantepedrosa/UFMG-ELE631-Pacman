@@ -1,13 +1,10 @@
-from .entidade import Entidade
+from .item import Item
 
-
-class Pellet(Entidade):
-    def __init__(self, x=0, y=0, valor=10):
+class Pellet(Item):
+    def __init__(self, x, y, valor=10):
         super().__init__(x, y, '.')
         self.valor = valor
 
-    def mover(self, *args, **kwargs):
-        return False
-
-    def coletar(self):
+    def coletar(self, pacman):
+        pacman.pontos += self.valor
         return self.valor
