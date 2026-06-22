@@ -1,7 +1,7 @@
 from .tabuleiro.tabuleiro_renderizador import TabuleiroRenderizador
 from .tabuleiro.tabuleiro import Tabuleiro
 from .entidades.pacman import Pacman
-from .entidades.fantasmas_especificos import Blinky, Pinky
+from .entidades.fantasmas_especificos import Blinky, Pinky, Inky, Clyde
 from .entidades.pellet import Pellet
 from .entidades.power_pellet import PowerPellet
 from .entidades.fruta import Fruta
@@ -48,16 +48,23 @@ class Jogo:
 
     def _carregar_fantasmas(self):
         mapa = self.tabuleiro.carregar_mapa()
-        contador = 0
+
+        classes = [
+            Blinky,
+            Pinky,
+            Inky,
+            Clyde,
+        ]
+
+        indice = 0
 
         for y, linha in enumerate(mapa):
             for x, valor in enumerate(linha):
                 if valor == 'G':
-                    if contador % 2 == 0:
-                        self.fantasmas.append(Blinky(x, y))
-                    else:
-                        self.fantasmas.append(Pinky(x, y))
-                    contador += 1
+                    classe = classes[indice % len(classes)]
+                    self.fantasmas.append(classe(x, y))
+                    indice += 1
+
                     self.tabuleiro.set_elemento(x, y, ' ')
 
     def iniciar(self):

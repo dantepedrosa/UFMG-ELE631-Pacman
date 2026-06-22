@@ -15,7 +15,7 @@ classDiagram
     }
 
     class Personagem {
-        - \_\_init__(self, x, y, simbolo) None
+        - \_\_init__(self, x, y, simbolo, cor) None
         + mover(self, *args, **kwargs)*
     }
 
@@ -51,6 +51,7 @@ classDiagram
     }
 
     class Item {
+        - \_\_init__(self, x, y, **kwargs) None
         + coletar(self, pacman)*
         + mover(self, *args, **kwargs)
     }
@@ -69,17 +70,16 @@ classDiagram
     class GameScreen {
         - \_\_init__(self, master, on_exit) None
         + create_widgets(self)
-        - \_on_key_press(self, event)
-        + update_map(self, mapa_text)
-        - \_render_and_check_status(self, mapa_text, status_text, vidas_antes)
-        + show_victory_screen(self)
-        + proximo_nivel(self)
-        + set_status(self, text)
+        + atualizar_interface_status(self, mensagem_alerta)
+        + update_map(self, mapa_text, mapa_cores)
         + start_loop(self, game)
         - \_run_step(self)
         - \_resume_and_run(self)
-        + stop_loop(self)
+        - \_on_key_press(self, event)
+        - \_render_and_check_status(self, mapa_text, status_text, vidas_antes, mapa_cores)
+        + proximo_nivel(self)
         + exit_game(self)
+        + stop_loop(self)
     }
 
     class Jogo {
@@ -95,14 +95,14 @@ classDiagram
         - \_atualizar_status(self)
         + stop(self)
         + status(self)
+        + obter_mapa_cores(self)
     }
 
     class MainMenuScreen {
         - \_\_init__(self, master, on_start, read_scores) None
         + create_widgets(self)
         + load_scores(self)
-        + on_start_click(self)
-        + set_status(self, value)
+        - \_on_start_click(self)
     }
 
     class ManagerScore {
@@ -192,7 +192,7 @@ classDiagram
 
     Personagem ..|> Entidade
 
-    PowerPellet --|> Pellet
+    PowerPellet --|> Item
 
     MainMenuScreen --|> Screen
 

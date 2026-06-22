@@ -2,7 +2,7 @@ from .personagem import Personagem
 
 class Fantasma(Personagem):
     def __init__(self, x, y, cor, estado='normal'):
-        super().__init__(x, y, simbolo='G', cor=cor)
+        super().__init__(x, y, simbolo='ᗣ', cor=cor)
         self.cor = cor
         self.estado = estado
         self.ultima_posicao = None
