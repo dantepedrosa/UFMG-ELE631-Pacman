@@ -3,12 +3,19 @@ from tkinter import messagebox
 
 BG_COLOR = '#050505'
 PANEL_COLOR = '#0e0e0e'
-TEXT_COLOR = '#00ff00'
+TEXT_COLOR = '#FFFFFF'
 BUTTON_BG = '#1f1f1f'
-BUTTON_FG = '#00ff00'
-BORDER_COLOR = '#00aa00'
+BUTTON_FG = '#FFFFFF'
+BORDER_COLOR = '#1919A6'
 MONO_FONT = 'Consolas'
 MONO_FONT_BOLD = ('Consolas', 'bold')
+TITULO_ASCII = "\n".join([
+    "█████╗  ████╗  █████╗     ██╗   ██╗ ████╗ ███╗  ██╗",
+    "██╔═██╗██╔═██╗██╔═══╝     ███╗ ███║██╔═██╗████╗ ██║",
+    "█████╔╝██████║██║    ███╗ ██╔██╔██║██████║██╔██╗██║",
+    "██║    ██║ ██║╚█████╗╚══╝ ██║╚═╝██║██║ ██║██║ ████║",
+    "╚═╝    ╚═╝ ╚═╝ ╚════╝     ╚═╝   ╚═╝╚═╝ ╚═╝╚═╝  ╚══╝"
+])
 
 
 class Screen:
@@ -37,10 +44,11 @@ class MainMenuScreen(Screen):
 
         title = tk.Label(
             header,
-            text='PAC-MAN',
-            font=('Consolas', 32, 'bold'),
-            fg=TEXT_COLOR,
+            text=TITULO_ASCII,
+            font=('Consolas', 10, 'bold'), # Reduzido para 10 para caber bem na tela
+            fg="#FFE300",
             bg=BG_COLOR,
+            justify='center' # Essencial para alinhar ASCII art
         )
         title.pack()
 
@@ -214,10 +222,11 @@ class GameScreen(Screen):
 
         title = tk.Label(
             header,
-            text='PAC-MAN - JOGO',
-            font=('Consolas', 24, 'bold'),
-            fg=TEXT_COLOR,
+            text=TITULO_ASCII,
+            font=('Consolas', 10, 'bold'), 
+            fg="#FFE300",
             bg=BG_COLOR,
+            justify='center'
         )
         title.pack()
 
@@ -241,6 +250,7 @@ class GameScreen(Screen):
             insertbackground=TEXT_COLOR,
             bd=1,
             relief='flat',
+            wrap='none'
         )
         self.map_area.pack(padx=12, pady=(8, 0), fill='both', expand=True)
         self.map_area.config(state='disabled')

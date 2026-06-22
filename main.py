@@ -19,6 +19,8 @@ class MenuApp:
         self.root.configure(bg=BG_COLOR)
         self.root.resizable(False, False)
 
+        self.root.geometry('1130x1080')
+
         self.game = None
         self.main_screen = MainMenuScreen(root, self.start_game, self.read_scores)
         self.game_screen = GameScreen(root, self.end_game)
